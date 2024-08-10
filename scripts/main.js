@@ -17,9 +17,23 @@ const controls = new OrbitControls(camera, renderer.domElement);
 // Scene
 const scene = new THREE.Scene();
 const geometry = new THREE.BoxGeometry();
-const material = new THREE.MeshBasicMaterial({ color: 0x00d000 });
+const material = new THREE.MeshLambertMaterial({ color: 0x00d000 });
 const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
+
+function setupLights() {
+    const light1 = new THREE.DirectionalLight();
+    light1.position.set(1, 1, 1);
+    scene.add(light1);
+
+    const light2 = new THREE.DirectionalLight();
+    light1.position.set(-1, 1, -0.5);
+    scene.add(light2);
+
+    const ambient = new THREE.AmbientLight();
+    ambient.intensity = 0.1;
+    scene.add(ambient);
+}
 
 // Render loop
 function animate() {
@@ -35,4 +49,5 @@ window.addEventListener("resize", () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
 })
 
+setupLights();
 animate();
