@@ -6,14 +6,16 @@ import { gapSize } from "three/webgpu";
 const renderer = new THREE.WebGLRenderer();
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setClearColor(0x80a0e0);
 document.body.appendChild(renderer.domElement);
 
 // Camera
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight);
-camera.position.set(2, 2, 2);
-camera.lookAt(0, 0, 0);
+camera.position.set(-32, 16, -32);
 
 const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(16, 0, 16);
+controls.update();
 
 // Scene
 const scene = new THREE.Scene();
