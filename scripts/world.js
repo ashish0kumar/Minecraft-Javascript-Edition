@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { SimplexNoise } from "three/examples/jsm/Addons.js";
 
 const geometry = new THREE.BoxGeometry();
 const material = new THREE.MeshLambertMaterial({ color: 0x00d000 });
@@ -11,6 +12,8 @@ export class World extends THREE.Group {
     * }[][][]}
     */
     data = [];
+
+    threshold = 0.5;
 
     constructor(size = { width: 64, height: 32 }) {
         super();
@@ -33,7 +36,7 @@ export class World extends THREE.Group {
                 const row = [];
                 for (let z = 0; z < this.size.width; z++) {
                     row.push({
-                        id: 1,
+                        id: Math.random() > this.threshold ? 1 : 0,
                         instanceId: null
                     });
                 }
