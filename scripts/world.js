@@ -13,6 +13,14 @@ export class World extends THREE.Group {
     */
     data = [];
 
+    param ={
+        terrain: {
+            scale: 30,
+            magnitude: 0.5,
+            offset: 0.2
+        }
+    };
+
     threshold = 0.5;
 
     constructor(size = { width: 64, height: 32 }) {
@@ -21,14 +29,15 @@ export class World extends THREE.Group {
     }
 
     generate() {
+        this.initializeTerrain();
         this.generateTerrain();
         this.generateMeshes();
     }
 
     /**
-     * Generates the world terrain data
+     * Initializing the world terrain data
      */
-    generateTerrain() {
+    initializeTerrain() {
         this.data = [];
         for (let x = 0; x < this.size.width; x++) {
             const slice = [];
@@ -36,13 +45,44 @@ export class World extends THREE.Group {
                 const row = [];
                 for (let z = 0; z < this.size.width; z++) {
                     row.push({
-                        id: Math.random() > this.threshold ? 1 : 0,
+                        id: 0,
                         instanceId: null
                     });
                 }
                 slice.push(row);
             }
             this.data.push(slice);
+        }
+    }
+
+    /**
+     * Generates the world terrain data
+     */
+    generateTerrain() {
+        const simplex = new SimplexNoise();
+        for (let x = 0; x < this.size.width; x++) {
+            for (let z = 0; z < this.size.width; z++) {
+
+                // Compute the noise value at this x-z location
+                const value = simplex.noise(
+                    x / this.param.terrain.scale,
+                    z / this.param.terrain.scale
+                );
+
+                // Scale the noise based on the magnitude/offset
+                const scaledNoise = this.param.terrain.offset + this.param.terrain.magnitude * value;
+
+                // Compute the height of the terrain at this x-z location
+                let height = Math.floor(this.size.height * scaledNoise);
+
+                // Clamping height between 0 and max height
+                height = Math.max(0, Math.min(height, this.size.height - 1));
+
+                // Fill in all blocks at or below the terrain height
+                for (let y = 0; y <= height; y++) {
+                    this.setBlockId(x, y, z, 1);
+                }
+            }
         }
     }
 
