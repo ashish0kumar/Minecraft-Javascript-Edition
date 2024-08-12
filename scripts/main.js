@@ -18,10 +18,10 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 document.body.appendChild(renderer.domElement);
 
 // Camera
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight);
-camera.position.set(-32, 16, -32);
+const orbitCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight);
+orbitCamera.position.set(-32, 16, -32);
 
-const controls = new OrbitControls(camera, renderer.domElement);
+const controls = new OrbitControls(orbitCamera, renderer.domElement);
 controls.target.set(16, 0, 16);
 controls.update();
 
@@ -60,15 +60,17 @@ function animate() {
 
     requestAnimationFrame(animate);
     player.applyInputs(dt);
-    renderer.render(scene, player.camera);
+    renderer.render(scene, player.controls.isLocked ? player.camera : orbitCamera);
     stats.update();
 
     previousTime = currentTime;
 }
 
 window.addEventListener("resize", () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
+    orbitCamera.aspect = window.innerWidth / window.innerHeight;
+    orbitCamera.updateProjectionMatrix();
+    player.camera.aspect = window.innerWidth / window.innerHeight;
+    player.camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 })
 
