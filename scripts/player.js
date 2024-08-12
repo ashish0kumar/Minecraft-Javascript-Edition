@@ -80,6 +80,10 @@ export class Player {
             case 'KeyD':
                 this.input.x = 0;
                 break;
+            case 'KeyR':
+                this.position.set(32, 16, 32);
+                this.velocity.set(0, 0, 0);
+                break;
         }
     }
 
