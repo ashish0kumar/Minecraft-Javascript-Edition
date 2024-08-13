@@ -4,7 +4,7 @@ import { PointerLockControls } from "three/examples/jsm/Addons.js";
 export class Player {
     radius = 0.5;
     height = 1.75;
-    
+
     maxSpeed = 10;
     input = new THREE.Vector3();
     velocity = new THREE.Vector3();
@@ -23,6 +23,13 @@ export class Player {
 
         document.addEventListener('keydown', this.onKeyDown.bind(this));
         document.addEventListener('keyup', this.onKeyUp.bind(this));
+
+        // Wirefram mesh vizualizing the player's boudning cylinder
+        this.boundsHelper = new THREE.Mesh(
+            new THREE.CylinderGeometry(this.radius, this.radius, this.height, 16),
+            new THREE.MeshBasicMaterial({ wireframe: true })
+        );
+        scene.add(this.boundsHelper);
     }
 
     applyInputs(dt) {
@@ -34,6 +41,14 @@ export class Player {
 
             document.getElementById("player-position").innerHTML = this.toString();
         }
+    }
+
+    /**
+     * Updates the position of the player's bounding cylinder helper
+     */
+    updateBoundsHelper() {
+        this.boundsHelper.position.copy(this.position);
+        this.boundsHelper.position.y -= this.height / 2;
     }
 
     /**
@@ -52,7 +67,7 @@ export class Player {
             this.controls.lock();
         }
 
-        switch(event.code) {
+        switch (event.code) {
             case 'KeyW':
                 this.input.z = this.maxSpeed;
                 break;

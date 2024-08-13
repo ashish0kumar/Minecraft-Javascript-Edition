@@ -34,7 +34,7 @@ scene.add(world);
 
 const player = new Player(scene);
 
-const physics = new Physics();
+const physics = new Physics(scene);
 
 function setupLights() {
     const sun = new THREE.DirectionalLight();
@@ -63,6 +63,7 @@ function animate() {
 
     requestAnimationFrame(animate);
     player.applyInputs(dt);
+    player.updateBoundsHelper();
     physics.update(dt, player, world);
     renderer.render(scene, player.controls.isLocked ? player.camera : orbitCamera);
     stats.update();
@@ -79,5 +80,5 @@ window.addEventListener("resize", () => {
 })
 
 setupLights();
-createUI(world, player);
+createUI(world, player, physics);
 animate();
