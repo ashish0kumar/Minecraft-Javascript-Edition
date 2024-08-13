@@ -3,17 +3,9 @@ import { Player } from './player';
 import { World } from './world';
 import { blocks } from './blocks';
 
-const collisionMaterial = new THREE.MeshBasicMaterial({
-    color: 0xff0000,
-    transparent: true,
-    opacity: 0.2
-});
-const collisionGeometry = new THREE.BoxGeometry(1.001, 1.001, 1.001);
-
 export class Physics {
     constructor(scene) {
-        this.helpers = new THREE.Group();
-        scene.add(this.helpers);
+        
     }
 
     /**
@@ -74,7 +66,6 @@ export class Physics {
                     if (block && block.id !== blocks.empty.id) {
                         const blockPos = { x, y, z };
                         candidates.push(blockPos);
-                        this.addCollisionHelper(blockPos);
                     }
                 }
             }
@@ -99,8 +90,6 @@ export class Physics {
      * @param {THREE.Object3D} block 
      */
     addCollisionHelper(block) {
-        const blockMesh = new THREE.Mesh(collisionGeometry, collisionMaterial);
-        blockMesh.position.copy(block);
-        this.helpers.add(blockMesh);
+        
     }
 }
