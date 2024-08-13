@@ -84,12 +84,4 @@ export class Physics {
     narrowPhase(candidates, player) {
 
     }
-
-    /**
-     * Visualizes the block the player is colliding with
-     * @param {THREE.Object3D} block 
-     */
-    addCollisionHelper(block) {
-        
-    }
 }
