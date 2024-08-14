@@ -176,6 +176,12 @@ export class Physics {
         });
 
         for (const collision of collisions) {
+            // We need to re-check if the contact point is inside the player's bounding cylinder
+            // for each collision since the player position is updated after each collision is resolved   
+            if (!this.pointInPlayerBoundingCylinder(collision.contactPoint, player)) {
+                continue;
+            }
+
             // 1. Adjust position of player so the block and player are no longer overlapping
             let deltaPosition = collision.normal.clone();
             deltaPosition.multiplyScalar(collision.overlap);
