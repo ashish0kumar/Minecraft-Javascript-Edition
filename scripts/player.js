@@ -8,6 +8,7 @@ export class Player {
     maxSpeed = 10;
     input = new THREE.Vector3();
     velocity = new THREE.Vector3();
+    #worldVelocity = new THREE.Vector3();
 
     camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 200);
     controls = new PointerLockControls(this.camera, document.body);
@@ -32,13 +33,32 @@ export class Player {
         scene.add(this.boundsHelper);
     }
 
+    /**
+     * Returns the velocity of the player in world coordinates
+     * @returns {THREE.Vector3}
+     */
+    get worldVelocity() {
+        this.#worldVelocity.copy(this.velocity);
+        this.#worldVelocity.applyEuler(new THREE.Euler(0, this.camera.rotation.y, 0));
+        return this.#worldVelocity;
+    }
+
+    /**
+     * Applies a change in velocity 'dv' that is specified in the world frame
+     * @param {THREE.Vector3} dv 
+     */
+    applyWorldDeltaVelocity(dv) {
+        dv.applyEuler(new THREE.Euler(0, -this.camera.rotation.y, 0));
+        this.velocity.add(dv);
+    }
+
     applyInputs(dt) {
         if (this.controls.isLocked) {
             this.velocity.x = this.input.x;
             this.velocity.z = this.input.z;
             this.controls.moveRight(this.velocity.x * dt);
             this.controls.moveForward(this.velocity.z * dt);
-            // this.position.y += this.velocity.y * dt;
+            this.position.y += this.velocity.y * dt;
 
             document.getElementById("player-position").innerHTML = this.toString();
         }
