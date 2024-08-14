@@ -4,6 +4,8 @@ import { PointerLockControls } from "three/examples/jsm/Addons.js";
 export class Player {
     radius = 0.5;
     height = 1.75;
+    jumpSpeed = 10;
+    onGround = false;
 
     maxSpeed = 10;
     input = new THREE.Vector3();
@@ -100,6 +102,11 @@ export class Player {
                 break;
             case 'KeyD':
                 this.input.x = this.maxSpeed;
+                break;
+            case 'Space':
+                if (this.onGround) {
+                    this.velocity.y += this.jumpSpeed;
+                }
                 break;
         }
     }

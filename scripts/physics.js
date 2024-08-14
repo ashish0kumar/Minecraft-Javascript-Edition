@@ -17,6 +17,10 @@ const contactMaterial = new THREE.MeshBasicMaterial({
 const contactGeometry = new THREE.SphereGeometry(0.05, 6, 6);
 
 export class Physics {
+    simulationRate = 200;
+    timestep = 1 / this.simulationRate;
+    accumulator = 0;
+
     gravity = 32;
 
     constructor(scene) {
@@ -31,11 +35,16 @@ export class Physics {
      * @param {World} world 
      */
     update(dt, player, world) {
-        this.helpers.clear();
-        player.velocity.y -= this.gravity * dt;
-        player.applyInputs(dt);
-        player.updateBoundsHelper();
-        this.detectCollisions(player, world);
+        this.accumulator += dt;
+
+        while (this.accumulator >= this.timestep) {
+            this.helpers.clear();
+            player.velocity.y -= this.gravity * this.timestep;
+            player.applyInputs(this.timestep);
+            player.updateBoundsHelper();
+            this.detectCollisions(player, world);
+            this.accumulator -= this.timestep;
+        }
     }
 
     /**
@@ -44,6 +53,7 @@ export class Physics {
      * @param {World} world 
      */
     detectCollisions(player, world) {
+        player.onGround = false;
         const candidates = this.broadPhase(player, world);
         const collisions = this.narrowPhase(candidates, player);
 
@@ -132,6 +142,7 @@ export class Physics {
                 if (overlapY < overlapXZ) {
                     normal = new THREE.Vector3(0, -Math.sign(dy), 0);
                     overlap = overlapY;
+                    player.onGround = true;
                 } else {
                     normal = new THREE.Vector3(-dx, 0, -dz).normalize();
                     overlap = overlapXZ;
