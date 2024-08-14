@@ -3,9 +3,25 @@ import { Player } from './player';
 import { World } from './world';
 import { blocks } from './blocks';
 
+const collisionMaterial = new THREE.MeshBasicMaterial({
+    color: 0xff0000,
+    transparent: true,
+    opacity: 0.2
+});
+const collisionGeometry = new THREE.BoxGeometry(1.001, 1.001, 1.001);
+
+const contactMaterial = new THREE.MeshBasicMaterial({ 
+    wireframe: true, 
+    color: 0x00ff00 
+});
+const contactGeometry = new THREE.SphereGeometry(0.05, 6, 6);
+
 export class Physics {
+    gravity = 32;
+
     constructor(scene) {
-        
+       this.helpers = new THREE.Group();
+       scene.add(this.helpers); 
     }
 
     /**
@@ -15,6 +31,10 @@ export class Physics {
      * @param {World} world 
      */
     update(dt, player, world) {
+        this.helpers.clear();
+        player.velocity.y -= this.gravity * dt;
+        player.applyInputs(dt);
+        player.updateBoundsHelper();
         this.detectCollisions(player, world);
     }
 
@@ -27,9 +47,9 @@ export class Physics {
         const candidates = this.broadPhase(player, world);
         const collisions = this.narrowPhase(candidates, player);
 
-        // if (collisions.length > 0) {
-        //     this.resolveCollisions(collisions);
-        // }
+        if (collisions.length > 0) {
+            this.resolveCollisions(collisions, player);
+        }
     }
 
     /**
@@ -66,6 +86,7 @@ export class Physics {
                     if (block && block.id !== blocks.empty.id) {
                         const blockPos = { x, y, z };
                         candidates.push(blockPos);
+                        this.addCollisionHelper(blockPos);
                     }
                 }
             }
@@ -112,7 +133,7 @@ export class Physics {
                     normal = new THREE.Vector3(0, -Math.sign(dy), 0);
                     overlap = overlapY;
                 } else {
-                    normal - new THREE.Vector3(-dx, 0, -dz).normalize();
+                    normal = new THREE.Vector3(-dx, 0, -dz).normalize();
                     overlap = overlapXZ;
                 }
 
@@ -122,12 +143,33 @@ export class Physics {
                     normal,
                     overlap
                 });
+
+                this.addContactPointerHelper(closestPoint);
             }
         }
 
         console.log(`Narrowphase collisions: ${collisions.length}`);
 
         return collisions;
+    }
+
+    /**
+     * Resolves each of the collisions found in the narrow-phase
+     * @param {object} collisions 
+     * @param {Player} player 
+     */
+    resolveCollisions(collisions, player) {
+        // Resolve the collisions in order of the smallest overlap to the largest
+        collisions.sort((a, b) => {
+            return a.overlap < b.overlap;
+        });
+
+        for (const collision of collisions) {
+            // 1. Adjust position of player so the block and player are no longer overlapping
+            let deltaPosition = collision.normal.clone();
+            deltaPosition.multiplyScalar(collision.overlap);
+            player.position.add(deltaPosition);
+        }
     }
 
     /**
@@ -144,5 +186,25 @@ export class Physics {
 
         // Check if contact point is inside the player's bounding cylinder
         return (Math.abs(dy) < player.height / 2) && (r_sq < player.radius * player.radius);
+    }
+
+    /**
+   * Visualizes the block the player is colliding with
+   * @param {THREE.Object3D} block 
+   */
+    addCollisionHelper(block) {
+        const blockMesh = new THREE.Mesh(collisionGeometry, collisionMaterial);
+        blockMesh.position.copy(block);
+        this.helpers.add(blockMesh);
+    }
+
+    /**
+     * Visualizes the contact at the point 'p'
+     * @param {{ x, y, z }} p 
+     */
+    addContactPointerHelper(p) {
+        const contactMesh = new THREE.Mesh(contactGeometry, contactMaterial);
+        contactMesh.position.copy(p);
+        this.helpers.add(contactMesh);
     }
 }

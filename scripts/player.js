@@ -38,6 +38,7 @@ export class Player {
             this.velocity.z = this.input.z;
             this.controls.moveRight(this.velocity.x * dt);
             this.controls.moveForward(this.velocity.z * dt);
+            // this.position.y += this.velocity.y * dt;
 
             document.getElementById("player-position").innerHTML = this.toString();
         }
