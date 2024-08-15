@@ -242,4 +242,11 @@ export class WorldChunk extends THREE.Group {
             return true;
         }
     }
+
+    disposeInstances() {
+        this.traverse((obj) => {
+            if (obj.dispose) obj.dispose();
+        });
+        this.clear();
+    }
 }
