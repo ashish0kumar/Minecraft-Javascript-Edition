@@ -62,9 +62,9 @@ export class WorldChunk extends THREE.Group {
                 for (let y = 0; y < this.size.height; y++) {
                     for (let z = 0; z < this.size.width; z++) {
                         const value = simplex.noise3d(
-                            x / resource.scale.x,
-                            y / resource.scale.y,
-                            z / resource.scale.z
+                            (this.position.x + x) / resource.scale.x,
+                            (this.position.y + y) / resource.scale.y,
+                            (this.position.z + z) / resource.scale.z
                         );
                         if (value > resource.scarcity) {
                             this.setBlockId(x, y, z, resource.id);
@@ -85,8 +85,8 @@ export class WorldChunk extends THREE.Group {
 
                 // Compute the noise value at this x-z location
                 const value = simplex.noise(
-                    x / this.params.terrain.scale,
-                    z / this.params.terrain.scale
+                    (this.position.x + x) / this.params.terrain.scale,
+                    (this.position.z + z) / this.params.terrain.scale
                 );
 
                 // Scale the noise based on the magnitude/offset
