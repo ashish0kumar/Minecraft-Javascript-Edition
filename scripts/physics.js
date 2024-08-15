@@ -17,14 +17,18 @@ const contactMaterial = new THREE.MeshBasicMaterial({
 const contactGeometry = new THREE.SphereGeometry(0.05, 6, 6);
 
 export class Physics {
+    // Acceleration due to gravity
+    gravity = 32;
+
+    // Physic simulation rate
     simulationRate = 200;
     timestep = 1 / this.simulationRate;
+    // Accumulator to keep track of leftover dt
     accumulator = 0;
-
-    gravity = 32;
 
     constructor(scene) {
        this.helpers = new THREE.Group();
+       this.helpers.visible = false;
        scene.add(this.helpers); 
     }
 
@@ -38,13 +42,13 @@ export class Physics {
         this.accumulator += dt;
 
         while (this.accumulator >= this.timestep) {
-            this.helpers.clear();
             player.velocity.y -= this.gravity * this.timestep;
             player.applyInputs(this.timestep);
-            player.updateBoundsHelper();
             this.detectCollisions(player, world);
             this.accumulator -= this.timestep;
         }
+        
+        player.updateBoundsHelper();
     }
 
     /**
@@ -54,6 +58,8 @@ export class Physics {
      */
     detectCollisions(player, world) {
         player.onGround = false;
+        this.helpers.clear();
+
         const candidates = this.broadPhase(player, world);
         const collisions = this.narrowPhase(candidates, player);
 

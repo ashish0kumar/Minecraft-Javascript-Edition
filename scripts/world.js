@@ -40,6 +40,25 @@ export class World extends THREE.Group {
     }
 
     /**
+       * Generates the chunk at the (x,z) coordinates
+       * @param {number} x 
+       * @param {number} z
+       */
+    generateChunk(x, z) {
+        const chunk = new WorldChunk(this.chunkSize, this.params);
+        chunk.position.set(x * this.chunkSize.width, 0, z * this.chunkSize.width);
+        chunk.userData = { x, z };
+
+        if (this.asyncLoading) {
+            requestIdleCallback(chunk.generate.bind(chunk), { timeout: 1000 });
+        } else {
+            chunk.generate();
+        }
+
+        this.add(chunk);
+    }
+
+    /**
      * Gets the block data at (x, y, z)
      * @param {number} x 
      * @param {number} y 
@@ -47,7 +66,56 @@ export class World extends THREE.Group {
      * @returns {{id: number, instanceId: number} | null}
      */
     getBlock(x, y, z) {
-        return null;
+        const coords = this.worldToChunkCoords(x, y, z);
+        const chunk = this.getChunk(coords.chunk.x, coords.chunk.z);
+
+        if (chunk) {
+            return chunk.getBlock(coords.block.x, y, coords.block.z);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Returns the chunk and world coordinates of the block at (x,y,z)\
+     *  - `chunk` is the coordinates of the chunk containing the block
+     *  - `block` is the world coordinates of the block
+     * @param {number} x 
+     * @param {number} y 
+     * @param {number} z 
+     * @returns {{
+     *  chunk: { x: number, z: number},
+     *  block: { x: number, y: number, z: number}
+     * }}
+     */
+    worldToChunkCoords(x, y, z) {
+        const chunkCoords = {
+            x: Math.floor(x / this.chunkSize.width),
+            z: Math.floor(z / this.chunkSize.width),
+        };
+
+        const blockCoords = {
+            x: x - this.chunkSize.width * chunkCoords.x,
+            y,
+            z: z - this.chunkSize.width * chunkCoords.z
+        }
+
+        return {
+            chunk: chunkCoords,
+            block: blockCoords
+        };
+    }
+
+    /**
+     * Returns the WorldChunk object the contains the specified coordinates
+     * @param {number} chunkX
+     * @param {number} chunkZ
+     * @returns {WorldChunk | null}
+     */
+    getChunk(chunkX, chunkZ) {
+        return this.children.find((chunk) => {
+            return chunk.userData.x === chunkX && chunk.userData.z === chunkZ;
+        });
     }
 
     disposeChunks() {
@@ -56,5 +124,6 @@ export class World extends THREE.Group {
                 chunk.disposeInstances();
             }
         });
+        this.clear();
     }
 }
