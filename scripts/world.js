@@ -49,31 +49,13 @@ export class World extends THREE.Group {
     }
 
     /**
-       * Generates the chunk at the (x,z) coordinates
-       * @param {number} x 
-       * @param {number} z
-       */
-    generateChunk(x, z) {
-        const chunk = new WorldChunk(this.chunkSize, this.params);
-        chunk.position.set(x * this.chunkSize.width, 0, z * this.chunkSize.width);
-        chunk.userData = { x, z };
-
-        if (this.asyncLoading) {
-            requestIdleCallback(chunk.generate.bind(chunk), { timeout: 1000 });
-        } else {
-            chunk.generate();
-        }
-
-        this.add(chunk);
-    }
-
-    /**
      * Updates the visible portions of the world based on the current player position
      * @param {Player} player 
      */
     update(player) {
         const visibleChunks = this.getVisibleChunks(player);
         const chunksToAdd = this.getChunksToAdd(visibleChunks);
+        this.removeUnusedChunks(visibleChunks);
     }
 
     /**
@@ -112,13 +94,38 @@ export class World extends THREE.Group {
         return visibleChunks.filter((chunk) => {
             const chunkExists = this.children
                 .map((obj) => obj.userData)
-                .find(({x, z}) => (
+                .find(({ x, z }) => (
                     chunk.x === x && chunk.z === z
                 ));
-            
+
             return !chunkExists;
         });
     }
+
+    /**
+     * Removes current loaded chunks that are no longer visible to the player
+     * @param {{x: number, y: number}[]} visibleChunks 
+     */
+    removeUnusedChunks(visibleChunks) {
+        // Filter down the chunks that are no longer visible to the player
+        const chunksToRemove = this.children.filter((chunk) => {
+            const { x, z } = chunk.userData;
+            const chunkExists = visibleChunks
+                .find((visibleChunk) => (
+                    visibleChunk.x === x && visibleChunk.z === z
+                ));
+
+            return !chunkExists;
+        });
+
+        for (const chunk of chunksToRemove) {
+            chunk.disposeInstances();
+            this.remove(chunk);
+            console.log(`Removing chunk at X: ${chunk.userData.x} Z: ${chunk.userData.z}`);
+        }
+    }
+
+    
 
     /**
      * Gets the block data at (x, y, z)
