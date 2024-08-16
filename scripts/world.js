@@ -10,7 +10,7 @@ export class World extends THREE.Group {
      * If it is set to 1, the adjacent chunks are rendered;
      * if set to 2, the chunks adjacent to those are rendered, and so on.
      */
-    drawDistance = 1;
+    drawDistance = 2;
 
     chunkSize = {
         width: 64,
@@ -37,10 +37,14 @@ export class World extends THREE.Group {
     generate() {
         this.disposeChunks();
 
-        for (let x = -1; x <= 1; x++) {
-            for (let z = -1; z <= 1; z++) {
+        for (let x = -this.drawDistance; x <= this.drawDistance; x++) {
+            for (let z = -this.drawDistance; z <= this.drawDistance; z++) {
                 const chunk = new WorldChunk(this.chunkSize, this.params);
-                chunk.position.set(x * this.chunkSize.width, 0, z * this.chunkSize.width);
+                chunk.position.set(
+                    x * this.chunkSize.width, 
+                    0, 
+                    z * this.chunkSize.width
+                );
                 chunk.userData = { x, z };
                 chunk.generate();
                 this.add(chunk);
@@ -56,6 +60,10 @@ export class World extends THREE.Group {
         const visibleChunks = this.getVisibleChunks(player);
         const chunksToAdd = this.getChunksToAdd(visibleChunks);
         this.removeUnusedChunks(visibleChunks);
+
+        for (const chunk of chunksToAdd) {
+            this.generateChunk(chunk.x, chunk.z);
+        }
     }
 
     /**
@@ -125,7 +133,23 @@ export class World extends THREE.Group {
         }
     }
 
-    
+    /**
+     * Generates the chunk at (x, z) coordinates
+     * @param {number} x 
+     * @param {number} z 
+     */
+    generateChunk(x, z) {
+        const chunk = new WorldChunk(this.chunkSize, this.params);
+        chunk.position.set(
+            x * this.chunkSize.width, 
+            0, 
+            z * this.chunkSize.width
+        );
+        chunk.userData = { x, z };
+        chunk.generate();
+        this.add(chunk);
+        console.log(`Adding chunk at X: ${x} Z: ${z}`);
+    }
 
     /**
      * Gets the block data at (x, y, z)
