@@ -9,6 +9,7 @@ export function createUI(world, player) {
     playerFolder.add(player.cameraHelper, 'visible').name('Show Camera Helper');
 
     const terrainFolder = gui.addFolder('Terrain');
+    terrainFolder.add(world, 'asyncLoading').name('Async Chunk Loading');
     terrainFolder.add(world, 'drawDistance', 0, 5, 1).name('Draw Distance');
     terrainFolder.add(world.params, 'seed', 0, 1000).name('Seed');
     terrainFolder.add(world.params.terrain, 'scale', 10, 100).name('Scale');

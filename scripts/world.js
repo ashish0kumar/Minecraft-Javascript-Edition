@@ -5,6 +5,11 @@ import { Player } from './player';
 export class World extends THREE.Group {
 
     /**
+     * Whether or not we want to load the chunks asynchronously
+     */
+    asyncLoading = true;
+
+    /**
      * The number of chunks to render around the player.
      * When this is set to 0, the chunk player is on is the only that is rendered.
      * If it is set to 1, the adjacent chunks are rendered;
@@ -20,8 +25,8 @@ export class World extends THREE.Group {
     params = {
         seed: 0,
         terrain: {
-            scale: 75,
-            magnitude: 0.25,
+            scale: 100,
+            magnitude: 0.1,
             offset: 0.2
         }
     };
@@ -41,8 +46,8 @@ export class World extends THREE.Group {
             for (let z = -this.drawDistance; z <= this.drawDistance; z++) {
                 const chunk = new WorldChunk(this.chunkSize, this.params);
                 chunk.position.set(
-                    x * this.chunkSize.width, 
-                    0, 
+                    x * this.chunkSize.width,
+                    0,
                     z * this.chunkSize.width
                 );
                 chunk.userData = { x, z };
@@ -141,12 +146,18 @@ export class World extends THREE.Group {
     generateChunk(x, z) {
         const chunk = new WorldChunk(this.chunkSize, this.params);
         chunk.position.set(
-            x * this.chunkSize.width, 
-            0, 
+            x * this.chunkSize.width,
+            0,
             z * this.chunkSize.width
         );
         chunk.userData = { x, z };
-        chunk.generate();
+
+        if (this.asyncLoading) {
+            requestIdleCallback(chunk.generate.bind(chunk), { timeout: 1000 });
+        } else {
+            chunk.generate();
+        }
+
         this.add(chunk);
         // console.log(`Adding chunk at X: ${x} Z: ${z}`);
     }
@@ -162,8 +173,12 @@ export class World extends THREE.Group {
         const coords = this.worldToChunkCoords(x, y, z);
         const chunk = this.getChunk(coords.chunk.x, coords.chunk.z);
 
-        if (chunk) {
-            return chunk.getBlock(coords.block.x, y, coords.block.z);
+        if (chunk && chunk.loaded) {
+            return chunk.getBlock(
+                coords.block.x, 
+                y, 
+                coords.block.z
+            );
         } else {
             return null;
         }
