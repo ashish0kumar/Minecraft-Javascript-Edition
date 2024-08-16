@@ -7,7 +7,7 @@ export class Player {
     jumpSpeed = 10;
     onGround = false;
 
-    maxSpeed = 10;
+    maxSpeed = 8;
     input = new THREE.Vector3();
     velocity = new THREE.Vector3();
     #worldVelocity = new THREE.Vector3();
@@ -32,7 +32,7 @@ export class Player {
             new THREE.CylinderGeometry(this.radius, this.radius, this.height, 16),
             new THREE.MeshBasicMaterial({ wireframe: true })
         );
-        scene.add(this.boundsHelper);
+        // scene.add(this.boundsHelper);
     }
 
     /**
