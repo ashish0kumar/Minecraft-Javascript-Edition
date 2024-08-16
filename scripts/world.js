@@ -13,15 +13,15 @@ export class World extends THREE.Group {
     drawDistance = 2;
 
     chunkSize = {
-        width: 64,
+        width: 32,
         height: 32
     };
 
     params = {
         seed: 0,
         terrain: {
-            scale: 30,
-            magnitude: 0.5,
+            scale: 75,
+            magnitude: 0.25,
             offset: 0.2
         }
     };
@@ -129,7 +129,7 @@ export class World extends THREE.Group {
         for (const chunk of chunksToRemove) {
             chunk.disposeInstances();
             this.remove(chunk);
-            console.log(`Removing chunk at X: ${chunk.userData.x} Z: ${chunk.userData.z}`);
+            // console.log(`Removing chunk at X: ${chunk.userData.x} Z: ${chunk.userData.z}`);
         }
     }
 
@@ -148,7 +148,7 @@ export class World extends THREE.Group {
         chunk.userData = { x, z };
         chunk.generate();
         this.add(chunk);
-        console.log(`Adding chunk at X: ${x} Z: ${z}`);
+        // console.log(`Adding chunk at X: ${x} Z: ${z}`);
     }
 
     /**
