@@ -28,6 +28,7 @@ controls.update();
 
 // Scene
 const scene = new THREE.Scene();
+scene.fog = new THREE.Fog(0x80a0e0, 50, 100);
 const world = new World();
 world.generate();
 scene.add(world);
@@ -92,5 +93,5 @@ window.addEventListener("resize", () => {
 })
 
 setupLights();
-createUI(world, player, physics);
+createUI(scene, world, player, physics);
 animate();
