@@ -61,6 +61,19 @@ function setupLights() {
     scene.add(ambient);
 }
 
+function onMouseDown(event) {
+    if (player.controls.isLocked && player.selectedCoords) {
+        console.log(`Removing block at ${JSON.stringify(player.selectedCoords)}`);
+        world.removeBlock(
+            player.selectedCoords.x,
+            player.selectedCoords.y,
+            player.selectedCoords.z
+        );
+    }
+}
+
+document.addEventListener('mousedown', onMouseDown);
+
 // Render loop
 let previousTime = performance.now();
 function animate() {

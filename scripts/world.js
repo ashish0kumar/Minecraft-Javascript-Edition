@@ -234,4 +234,23 @@ export class World extends THREE.Group {
         });
         this.clear();
     }
+
+    /**
+     * Removes the block at (x, y, z) and sets it to empty
+     * @param {number} x 
+     * @param {number} y 
+     * @param {number} z 
+     */
+    removeBlock(x, y, z) {
+        const coords = this.worldToChunkCoords(x, y, z);
+        const chunk = this.getChunk(coords.chunk.x, coords.chunk.z);
+
+        if (chunk) {
+            chunk.removeBlock(
+                coords.block.x,
+                coords.block.y,
+                coords.block.z
+            );
+        }
+    }
 }
