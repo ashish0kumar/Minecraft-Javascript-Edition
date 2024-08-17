@@ -70,6 +70,7 @@ function animate() {
     requestAnimationFrame(animate);
 
     if (player.controls.isLocked) {
+        player.update(world);
         physics.update(dt, player, world);
         world.update(player);
 

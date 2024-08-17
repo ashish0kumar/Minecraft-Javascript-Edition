@@ -1,5 +1,8 @@
 import * as THREE from "three";
 import { PointerLockControls } from "three/examples/jsm/Addons.js";
+import { World } from "./world";
+
+const CENTER_SCREEN = new THREE.Vector2();
 
 export class Player {
     radius = 0.5;
@@ -16,13 +19,16 @@ export class Player {
     controls = new PointerLockControls(this.camera, document.body);
     cameraHelper = new THREE.CameraHelper(this.camera);
 
+    raycaster = new THREE.Raycaster(undefined, undefined, 0, 3);
+    selectedCoords = null;
+
     /**
      * @param {THREE.Scene} scene 
      */
     constructor(scene) {
         this.position.set(32, 16, 32);
         scene.add(this.camera);
-        scene.add(this.cameraHelper);
+        // scene.add(this.cameraHelper);
 
         document.addEventListener('keydown', this.onKeyDown.bind(this));
         document.addEventListener('keyup', this.onKeyUp.bind(this));
@@ -43,6 +49,28 @@ export class Player {
         this.#worldVelocity.copy(this.velocity);
         this.#worldVelocity.applyEuler(new THREE.Euler(0, this.camera.rotation.y, 0));
         return this.#worldVelocity;
+    }
+
+    /**
+     * Updates the player state
+     * @param {World} world 
+     */
+    update(world) {
+        this.updateRaycaster(world);
+    }
+
+    /**
+     * Update the raycaster use for picking blocks
+     * @param {World} world 
+     */
+    updateRaycaster(world) {
+        this.raycaster.setFromCamera(CENTER_SCREEN, this.camera);
+        const intersections = this.raycaster.intersectObject(world, true);
+
+        if (intersections.length > 0) {
+            const intersection = intersections[0];
+            console.log(intersection.object.position);
+        }
     }
 
     /**
