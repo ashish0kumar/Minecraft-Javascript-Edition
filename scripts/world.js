@@ -253,6 +253,14 @@ export class World extends THREE.Group {
                 coords.block.z,
                 blockId
             );
+
+            // Hide adjacent neighbours if they are now hidden after adding a new block
+            this.hideBlock(x - 1, y, z);
+            this.hideBlock(x + 1, y, z);
+            this.hideBlock(x, y - 1, z);
+            this.hideBlock(x, y + 1, z);
+            this.hideBlock(x, y, z - 1);
+            this.hideBlock(x, y, z + 1);
         }
     }
 
@@ -295,6 +303,25 @@ export class World extends THREE.Group {
 
         if (chunk) {
             chunk.addBlockInstance(
+                coords.block.x,
+                coords.block.y,
+                coords.block.z
+            );
+        }
+    }
+
+    /**
+     * Hides the block at (x, y, z) by removing the mesh instance
+     * @param {number} x 
+     * @param {number} y 
+     * @param {number} z 
+     */
+    hideBlock(x, y, z) {
+        const coords = this.worldToChunkCoords(x, y, z);
+        const chunk = this.getChunk(coords.chunk.x, coords.chunk.z);
+
+        if (chunk && chunk.isBlockObscured(coords.block.x, coords.block.y, coords.block.z)) {
+            chunk.deleteBlockInstance(
                 coords.block.x,
                 coords.block.y,
                 coords.block.z
