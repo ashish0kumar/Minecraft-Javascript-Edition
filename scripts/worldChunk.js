@@ -176,6 +176,20 @@ export class WorldChunk extends THREE.Group {
     }
 
     /**
+     * Adds a new block at (x, y, z) of type `blockId`
+     * @param {number} x 
+     * @param {number} y 
+     * @param {number} z 
+     * @param {number} blockId 
+     */
+    addBlock(x, y, z, blockId) {
+        if (this.getBlock(x, y, z).id === blocks.empty.id) {
+            this.setBlockId(x, y, z, blockId);
+            this.addBlockInstance(x, y, z);
+        }
+    }
+
+    /**
      * Removes the block at (x, y, z)
      * @param {number} x 
      * @param {number} y 

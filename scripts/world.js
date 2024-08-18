@@ -236,6 +236,27 @@ export class World extends THREE.Group {
     }
 
     /**
+     * Adds a new block at (x, y, z) of type `blockId`
+     * @param {number} x 
+     * @param {number} y 
+     * @param {number} z 
+     * @param {number} blockId 
+     */
+    addBlock(x, y, z, blockId) {
+        const coords = this.worldToChunkCoords(x, y, z);
+        const chunk = this.getChunk(coords.chunk.x, coords.chunk.z);
+
+        if (chunk) {
+            chunk.addBlock(
+                coords.block.x,
+                coords.block.y,
+                coords.block.z,
+                blockId
+            );
+        }
+    }
+
+    /**
      * Removes the block at (x, y, z) and sets it to empty
      * @param {number} x 
      * @param {number} y 
