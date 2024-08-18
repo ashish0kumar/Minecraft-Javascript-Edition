@@ -222,7 +222,7 @@ export class WorldChunk extends THREE.Group {
         // Notify the instance mesh we updated the instance matrix
         // Also recompute the bounding sphere so raycasting works
         mesh.instanceMatrix.needsUpdate = true;
-        mesh.computeBoundSphere();
+        mesh.computeBoundingSphere();
 
         // Remove the instance associated with the block
         this.setBlockInstanceId(x, y, z, null);
