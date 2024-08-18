@@ -230,6 +230,31 @@ export class WorldChunk extends THREE.Group {
     }
 
     /**
+     * Create a new instance for the block at (x, y, z)
+     * @param {number} x 
+     * @param {number} y 
+     * @param {number} z 
+     */
+    addBlockInstance(x, y, z) {
+        const block = this.getBlock(x, y, z);
+
+        // Verify the block exists and is not an empty block type
+        if (block && block.id !== blocks.empty.id && block.instanceId === null) {
+            // Get the mesh and instance id of the block
+            const mesh = this.children.find((instanceMesh) => instanceMesh.name === block.id);
+            const instanceId = mesh.count++;
+            this.setBlockInstanceId(x, y, z, instanceId);
+
+            // Compute the transformation matrix for the new instance and update the instanced mesh
+            const matrix = new THREE.Matrix4();
+            matrix.setPosition(x, y, z);
+            mesh.setMatrixAt(instanceId, matrix);
+            mesh.instanceMatrix.needsUpdate = true;
+            mesh.computeBoundingSphere();
+        }
+    }
+
+    /**
      * Sets the block id for the block at (x, y, z)
      * @param {number} x
      * @param {number} y
