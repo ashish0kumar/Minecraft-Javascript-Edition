@@ -165,7 +165,6 @@ export class Player {
             case 'Digit8':
             case 'Digit9':
                 this.activeBlockId = Number(event.key);
-                console.log(`activeBlockId = ${event.key}`);
                 break;
             case 'KeyW':
                 this.input.z = this.maxSpeed;
