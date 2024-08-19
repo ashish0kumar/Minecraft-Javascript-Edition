@@ -40,7 +40,7 @@ export class World extends THREE.Group {
                 maxRadius: 4,
                 density: 0.5
             },
-            frequency: 0.05
+            frequency: 0.002
         }
     };
 

@@ -30,6 +30,7 @@ export class WorldChunk extends THREE.Group {
         this.initializeTerrain();
         this.generateResources(rng);
         this.generateTerrain(rng);
+        this.generateTrees(rng);
         this.loadPlayerChanges();
         this.generateMeshes();
 
@@ -117,6 +118,43 @@ export class WorldChunk extends THREE.Group {
         }
     }
 
+    /**
+     * Populate the world with trees
+     * @param {RNG} rng 
+     */
+    generateTrees(rng) {
+        const generateTreeTrunk = (x, z, rng) => {
+            const minH = this.params.trees.trunk.minHeight;
+            const maxH = this.params.trees.trunk.maxHeight;
+            const h = Math.round(minH + (maxH - minH) * rng.random());
+            
+            for (let y = 0; y < this.size.height; y++) {
+                const block = this.getBlock(x, y, z);
+                if (block.id === blocks.grass.id) {
+                    // The trunk of the tree starts here
+                    for (let treeY = y + 1; treeY <= y + h; treeY++) {
+                        this.setBlockId(x, treeY, z, blocks.tree.id);
+                    }
+                }
+            }
+        }
+
+        const generateTreeCanopy = (rng) => {
+
+        }
+
+        for (let x = 0; x < this.size.width; x++) {
+            for (let z = 0; z < this.size.width; z++) {
+                if (rng.random() < this.params.trees.frequency) {
+                    generateTreeTrunk(x, z, rng);
+                } 
+            }
+        }
+    }
+
+    /**
+     * Pulls any changes from the data store and applies them to the data model
+     */
     loadPlayerChanges() {
         for (let x = 0; x < this.size.width; x++) {
             for (let y = 0; y < this.size.height; y++) {
