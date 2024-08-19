@@ -29,6 +29,18 @@ export class World extends THREE.Group {
             scale: 80,
             magnitude: 0.2,
             offset: 0.2
+        },
+        trees: {
+            trunk: {
+                minHeight: 4,
+                maxHeight: 7
+            },
+            canopy: {
+                minRadius: 2,
+                maxRadius: 4,
+                density: 0.5
+            },
+            frequency: 0.05
         }
     };
 
