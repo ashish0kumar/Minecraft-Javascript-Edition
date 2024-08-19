@@ -41,6 +41,10 @@ export class World extends THREE.Group {
                 density: 0.5
             },
             frequency: 0.005
+        },
+        clouds: {
+            scale: 30,
+            density: 0.15
         }
     };
 

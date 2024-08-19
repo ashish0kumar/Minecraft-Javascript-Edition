@@ -31,6 +31,7 @@ export class WorldChunk extends THREE.Group {
         this.generateResources(rng);
         this.generateTerrain(rng);
         this.generateTrees(rng);
+        this.generateClouds(rng);
         this.loadPlayerChanges();
         this.generateMeshes();
 
@@ -153,6 +154,8 @@ export class WorldChunk extends THREE.Group {
             for (let x = -r; x <= r; x++) {
                 for (let y = -r; y <= r; y++) {
                     for (let z = -r; z <= r; z++) {
+                        const n = rng.random();
+
                         // Make sure the block is within the canopy radius
                         if (x * x + y * y + z * z > r * r) continue;
 
@@ -161,7 +164,7 @@ export class WorldChunk extends THREE.Group {
                         if (block && block.id !== blocks.empty.id) continue;
 
                         // Fill in the tree canopy with leaves based on the density param
-                        if (rng.random() < this.params.trees.canopy.density) {
+                        if (n < this.params.trees.canopy.density) {
                             this.setBlockId(centerX + x, centerY + y, centerZ + z, blocks.leaves.id);
                         }
                     }
@@ -174,6 +177,26 @@ export class WorldChunk extends THREE.Group {
             for (let z = offset; z < this.size.width - offset; z++) {
                 if (rng.random() < this.params.trees.frequency) {
                     generateTreeTrunk(x, z, rng);
+                }
+            }
+        }
+    }
+
+    /**
+     * Creates happy little clouds
+     * @param {RNG} rng 
+     */
+    generateClouds(rng) {
+        const simplex = new SimplexNoise(rng);
+        for (let x = 0; x < this.size.width; x++) {
+            for (let z = 0; z < this.size.width; z++) {
+                const value = (simplex.noise(
+                    (this.position.x + x) / this.params.clouds.scale,
+                    (this.position.z + z) / this.params.clouds.scale
+                ) + 1) * 0.5;
+
+                if (value < this.params.clouds.density) {
+                    this.setBlockId(x, this.size.height - 1, z, blocks.cloud.id);
                 }
             }
         }
