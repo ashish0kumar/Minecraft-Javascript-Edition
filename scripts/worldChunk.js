@@ -238,6 +238,7 @@ export class WorldChunk extends THREE.Group {
             this.size.width / 2
         );
         waterMesh.scale.set(this.size.width, this.size.width, 1);
+        waterMesh.layers.set(1);
 
         this.add(waterMesh);
     }
