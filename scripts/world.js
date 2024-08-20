@@ -27,13 +27,14 @@ export class World extends THREE.Group {
         seed: 0,
         terrain: {
             scale: 80,
-            magnitude: 0.2,
-            offset: 0.2
+            magnitude: 10,
+            offset: 4,
+            waterOffset: 4
         },
         trees: {
             trunk: {
-                minHeight: 4,
-                maxHeight: 8
+                minHeight: 5,
+                maxHeight: 6
             },
             canopy: {
                 minRadius: 2,

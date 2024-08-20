@@ -100,18 +100,22 @@ export class WorldChunk extends THREE.Group {
                 const scaledNoise = this.params.terrain.offset + this.params.terrain.magnitude * value;
 
                 // Compute the height of the terrain at this x-z location
-                let height = Math.floor(this.size.height * scaledNoise);
+                let height = Math.floor(scaledNoise);
 
                 // Clamping height between 0 and max height
                 height = Math.max(0, Math.min(height, this.size.height - 1));
 
                 // Fill in all blocks at or below the terrain height
                 for (let y = 0; y <= this.size.height; y++) {
-                    if (y < height && this.getBlock(x, y, z).id === blocks.empty.id) {
-                        this.setBlockId(x, y, z, blocks.dirt.id);
+                    if (y <= this.params.terrain.waterOffset && y <= height) {
+                        this.setBlockId(x, y, z, blocks.sand.id);
                     } else if (y === height) {
                         this.setBlockId(x, y, z, blocks.grass.id);
-                    } else if (y > height) {
+                    }
+                    if (y < height && this.getBlock(x, y, z).id === blocks.empty.id) {
+                        this.setBlockId(x, y, z, blocks.dirt.id);
+                    }
+                    else if (y > height) {
                         this.setBlockId(x, y, z, blocks.empty.id);
                     }
                 }
@@ -218,11 +222,33 @@ export class WorldChunk extends THREE.Group {
         }
     }
 
+    generateWater() {
+        const material = new THREE.MeshLambertMaterial({
+            color: 0x9090e0,
+            transparent: true,
+            opacity: 0.5,
+            side: THREE.DoubleSide
+        });
+
+        const waterMesh = new THREE.Mesh(new THREE.PlaneGeometry(), material);
+        waterMesh.rotateX(-Math.PI / 2.0);
+        waterMesh.position.set(
+            this.size.width / 2,
+            this.params.terrain.waterOffset + 0.4,
+            this.size.width / 2
+        );
+        waterMesh.scale.set(this.size.width, this.size.width, 1);
+
+        this.add(waterMesh);
+    }
+
     /**
      * Generates the 3D representation of the world from the world data
      */
     generateMeshes() {
         this.clear();
+
+        this.generateWater();
 
         const maxCount = this.size.width * this.size.width * this.size.height;
 
