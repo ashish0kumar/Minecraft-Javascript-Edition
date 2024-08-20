@@ -128,8 +128,6 @@ export class WorldChunk extends THREE.Group {
      * @param {RNG} rng 
      */
     generateTrees() {
-        let rng = new RNG(this.params.seed);
-
         const generateTreeTrunk = (x, z, rng) => {
             const minH = this.params.trees.trunk.minHeight;
             const maxH = this.params.trees.trunk.maxHeight;
@@ -178,6 +176,8 @@ export class WorldChunk extends THREE.Group {
             }
         }
 
+        let rng = new RNG(this.params.seed);
+        
         let offset = this.params.trees.canopy.maxRadius;
         for (let x = offset; x < this.size.width - offset; x++) {
             for (let z = offset; z < this.size.width - offset; z++) {
