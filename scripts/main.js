@@ -59,7 +59,7 @@ function setupLights() {
     scene.add(sun.target);
 
     const ambient = new THREE.AmbientLight();
-    ambient.intensity = 0.1;
+    ambient.intensity = 0.2;
     scene.add(ambient);
 }
 
