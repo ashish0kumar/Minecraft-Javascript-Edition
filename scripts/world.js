@@ -20,7 +20,7 @@ export class World extends THREE.Group {
 
     chunkSize = {
         width: 32,
-        height: 32
+        height: 40
     };
 
     params = {

@@ -30,7 +30,7 @@ export class WorldChunk extends THREE.Group {
         this.initializeTerrain();
         this.generateResources(rng);
         this.generateTerrain(rng);
-        this.generateTrees(rng);
+        this.generateTrees();
         this.generateClouds(rng);
         this.loadPlayerChanges();
         this.generateMeshes();
@@ -127,7 +127,9 @@ export class WorldChunk extends THREE.Group {
      * Populate the world with trees
      * @param {RNG} rng 
      */
-    generateTrees(rng) {
+    generateTrees() {
+        let rng = new RNG(this.params.seed);
+
         const generateTreeTrunk = (x, z, rng) => {
             const minH = this.params.trees.trunk.minHeight;
             const maxH = this.params.trees.trunk.maxHeight;
