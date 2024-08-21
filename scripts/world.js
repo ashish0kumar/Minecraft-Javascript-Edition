@@ -19,8 +19,8 @@ export class World extends THREE.Group {
     drawDistance = 3;
 
     chunkSize = {
-        width: 32,
-        height: 40
+        width: 24,
+        height: 32
     };
 
     params = {
