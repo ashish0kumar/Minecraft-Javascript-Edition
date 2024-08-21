@@ -12,10 +12,10 @@ export class ModelLoader {
      * @param {(object) => ()} onLoad 
      */
     loadModels(onLoad) {
-        this.loader.load('/public/models/pickaxe.glb', (model) => {
+        this.loader.load('/models/pickaxe.glb', (model) => {
             const mesh = model.scene;
             this.models.pickaxe = mesh;
-            onload(this.models);
+            onLoad(this.models);
         })
     }
 }

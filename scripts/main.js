@@ -36,13 +36,13 @@ const world = new World();
 world.generate();
 scene.add(world);
 
-const modelLoader = new ModelLoader();
-modelLoader.loadModels((models) => {
-    
-});
-
 const player = new Player(scene);
 const physics = new Physics(scene);
+
+const modelLoader = new ModelLoader();
+modelLoader.loadModels((models) => {
+    player.tool.setMesh(models.pickaxe);
+});
 
 const sun = new THREE.DirectionalLight();
 
