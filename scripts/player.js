@@ -38,7 +38,6 @@ export class Player {
 
         // Hide/show instructions based on pointer controls locking/unlocking
         this.controls.addEventListener('lock', function () {
-            console.log('locked');
             document.getElementById('overlay').style.visibility = 'hidden';
         });
 
