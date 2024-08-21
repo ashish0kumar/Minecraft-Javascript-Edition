@@ -6,6 +6,7 @@ import { createUI } from "./ui";
 import { Player } from "./player";
 import { Physics } from "./physics";
 import { blocks } from "./blocks";
+import { ModelLoader } from "./modelLoader";
 
 const stats = new Stats();
 document.body.append(stats.dom);
@@ -35,8 +36,12 @@ const world = new World();
 world.generate();
 scene.add(world);
 
-const player = new Player(scene);
+const modelLoader = new ModelLoader();
+modelLoader.loadModels((models) => {
+    
+});
 
+const player = new Player(scene);
 const physics = new Physics(scene);
 
 const sun = new THREE.DirectionalLight();
