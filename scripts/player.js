@@ -12,7 +12,7 @@ export class Player {
     jumpSpeed = 10;
     onGround = false;
 
-    maxSpeed = 8;
+    maxSpeed = 6;
     input = new THREE.Vector3();
     velocity = new THREE.Vector3();
     #worldVelocity = new THREE.Vector3();
@@ -23,7 +23,7 @@ export class Player {
 
     raycaster = new THREE.Raycaster(undefined, undefined, 0, 3);
     selectedCoords = null;
-    activeBlockId = blocks.grass.id;
+    activeBlockId = blocks.empty.id;
 
     tool = new Tool();
 
@@ -35,6 +35,16 @@ export class Player {
         this.camera.layers.enable(1);
         scene.add(this.camera);
         // scene.add(this.cameraHelper);
+
+        // Hide/show instructions based on pointer controls locking/unlocking
+        this.controls.addEventListener('lock', function () {
+            console.log('locked');
+            document.getElementById('overlay').style.visibility = 'hidden';
+        });
+
+        this.controls.addEventListener('unlock', function () {
+            document.getElementById('overlay').style.visibility = 'visible';
+        });
 
         this.camera.add(this.tool);
 
@@ -172,8 +182,12 @@ export class Player {
             case 'Digit6':
             case 'Digit7':
             case 'Digit8':
-            case 'Digit9':
+                document.getElementById(`toolbar-${this.activeBlockId}`).classList.remove('selected');
                 this.activeBlockId = Number(event.key);
+                document.getElementById(`toolbar-${this.activeBlockId}`).classList.add('selected');
+
+                // Only show the tool when it is currently active
+                this.tool.visible = (this.activeBlockId === 0);
                 break;
             case 'KeyW':
                 this.input.z = this.maxSpeed;
