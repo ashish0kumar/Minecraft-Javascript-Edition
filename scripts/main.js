@@ -77,6 +77,7 @@ function onMouseDown(event) {
                 player.selectedCoords.y,
                 player.selectedCoords.z
             );
+            player.tool.startAnimation();
         } else {
             // console.log(`Adding block at ${JSON.stringify(player.selectedCoords)}`);
             world.addBlock(
