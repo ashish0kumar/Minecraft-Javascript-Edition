@@ -238,9 +238,9 @@ export class Player {
      */
     toString() {
         let str = '';
-        str += `X: ${this.position.x.toFixed(3)} `;
-        str += `Y: ${this.position.y.toFixed(3)} `;
-        str += `Z: ${this.position.z.toFixed(3)}`;
+        str += `${this.position.x.toFixed(0)}, `;
+        str += `${this.position.y.toFixed(0)}, `;
+        str += `${this.position.z.toFixed(0)}`;
         return str;
     }
 }

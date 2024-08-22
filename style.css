@@ -26,6 +26,10 @@ h1 {
     margin: 8px;
 }
 
+#player-position {
+    font-family: 'Minecraft';
+}
+
 #toolbar-container {
     position: fixed;
     bottom: 8px;
@@ -71,10 +75,15 @@ h1 {
     text-align: center;
 }
 
+#overlay h2 {
+    margin-bottom: 120px;
+}
+
 #status {
     position: fixed;
     bottom: 8px;
     left: 8px;
     font-size: 2em;
+    font-family: 'Minecraft';
     color: white;
 }
