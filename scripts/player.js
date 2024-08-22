@@ -7,12 +7,14 @@ import { Tool } from "./tool";
 const CENTER_SCREEN = new THREE.Vector2();
 
 export class Player {
-    radius = 0.5;
     height = 1.75;
+    radius = 0.5;
+    maxSpeed = 6;
+
     jumpSpeed = 10;
+    sprinting = false;
     onGround = false;
 
-    maxSpeed = 6;
     input = new THREE.Vector3();
     velocity = new THREE.Vector3();
     #worldVelocity = new THREE.Vector3();
@@ -137,8 +139,8 @@ export class Player {
 
     applyInputs(dt) {
         if (this.controls.isLocked) {
-            this.velocity.x = this.input.x;
-            this.velocity.z = this.input.z;
+            this.velocity.x = this.input.x * (this.sprinting ? 1.3 : 1);
+            this.velocity.z = this.input.z * (this.sprinting ? 1.3 : 1);
             this.controls.moveRight(this.velocity.x * dt);
             this.controls.moveForward(this.velocity.z * dt);
             this.position.y += this.velocity.y * dt;
@@ -205,6 +207,10 @@ export class Player {
                     this.velocity.y += this.jumpSpeed;
                 }
                 break;
+            case 'ShiftLeft':
+            case 'ShiftRight':
+                this.sprinting = true;
+                break;
         }
     }
 
@@ -228,6 +234,10 @@ export class Player {
             case 'KeyR':
                 this.position.set(32, 16, 32);
                 this.velocity.set(0, 0, 0);
+                break;
+            case 'ShiftLeft':
+            case 'ShiftRight':
+                this.sprinting = false;
                 break;
         }
     }
