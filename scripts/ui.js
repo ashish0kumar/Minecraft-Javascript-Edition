@@ -2,17 +2,17 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { resources } from './blocks';
 
 export function createUI(scene, world, player) {
-    const gui = new GUI();
+    const gui = new GUI().close();
 
-    const sceneFolder = gui.addFolder('Scene').close();
+    const sceneFolder = gui.addFolder('Scene');
     sceneFolder.add(scene.fog, 'near', 1, 200, 1).name('Fog Near');
     sceneFolder.add(scene.fog, 'far', 1, 200, 1).name('Fog Far');
 
-    const playerFolder = gui.addFolder('Player').close();
+    const playerFolder = gui.addFolder('Player');
     playerFolder.add(player, 'maxSpeed', 1, 20).name('Max Speed');
     playerFolder.add(player.cameraHelper, 'visible').name('Show Camera Helper');
 
-    const terrainFolder = gui.addFolder('Terrain').close();
+    const terrainFolder = gui.addFolder('Terrain');
     terrainFolder.add(world, 'asyncLoading').name('Async Chunk Loading');
     terrainFolder.add(world, 'drawDistance', 0, 5, 1).name('Draw Distance');
     terrainFolder.add(world.params, 'seed', 0, 1000).name('Seed');
