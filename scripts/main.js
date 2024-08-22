@@ -49,7 +49,7 @@ const sun = new THREE.DirectionalLight();
 function setupLights() {
     sun.position.set(50, 50, 50);
     sun.castShadow = true;
-    sun.intensity = 1.5;
+    // sun.intensity = 1.5;
     sun.shadow.camera.left = -100;
     sun.shadow.camera.right = 100;
     sun.shadow.camera.bottom = -100;
