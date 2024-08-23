@@ -1,7 +1,11 @@
-<img align="center" width="50px" src="/public/logo.webp" />
+<p align="center">
+  <img width="100px" src="/public/logo.webp" />
+</p>
 
-# Minecraft-Javascript-Edition
-A basic Minecraft clone built using Javascript and three.js
+<h1 align="center">Minecraft-Javascript-Edition</h1>
+<p align="center">A basic Minecraft clone built using Javascript and three.js</p>
+
+<br/>
 
 ![screenshot](/screenshots/1.png)
 
