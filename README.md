@@ -21,10 +21,10 @@
 - Save/Load
 
 ## 📦 Usage
-- Use the toolbar to select different block types.
-- Left-click to remove blocks, and right-click to place blocks.
+- Use the toolbar to select different block types and pickaxe.
+- Use pickaxe to remove blocks, and right-click to place blocks.
 - Explore the terrain to find resources like Coal and Iron.
-- Modify the landscape to your liking with easy-to-use terraforming tools.
+- Modify the landscape to your liking.
 
 ## 📩 Installation
 
