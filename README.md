@@ -1,3 +1,5 @@
+<img align="center" src="/public/logo.webp" />
+
 # Minecraft-Javascript-Edition
 A basic Minecraft clone built using Javascript and three.js
 
