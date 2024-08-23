@@ -9,13 +9,48 @@
 
 ![screenshot](/screenshots/1.png)
 
-## Live Demo
+## 🚀 Live Demo
 [https://minecraft-javascript-edition.netlify.app](https://minecraft-javascript-edition.netlify.app)
 
-## Features
-- Procedural World Generation
+## ✨ Features
+- Procedural Infinite World Generation
 - Terraforming
 - Resources (Coal and Iron)
 - Terrain Chunking
 - Toolbar
 - Save/Load
+
+## 📦 Usage
+- Use the toolbar to select different block types.
+- Left-click to remove blocks, and right-click to place blocks.
+- Explore the terrain to find resources like Coal and Iron.
+- Modify the landscape to your liking with easy-to-use terraforming tools.
+
+## 📩 Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/ashish0kumar/Minecraft-Javascript-Edition.git
+cd Minecraft-Javascript-Edition
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+Open your browser and navigate to http://localhost:5173 to play the game.
+
+## 🤝 Contributing
+Contributions are welcome! If you have any ideas or improvements, feel free to submit a pull request.
+
+## 📜 License
+This project is licensed under the MIT License. See the LICENSE file for details.
